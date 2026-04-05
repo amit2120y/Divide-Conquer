@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAA Algorithms Playground</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <main class="container">
+        <h1>DAA Algorithms Playground</h1>
+        <p class="subtitle">Design & Analysis of Algorithms - Interactive Simulator</p>
+
+        <section class="controls">
+            <div class="control-group">
+                <label for="category">Algorithm Paradigm:</label>
+                <select id="category">
+                    <option value="divide">Divide & Conquer</option>
+                    <option value="greedy">Greedy</option>
+                    <option value="dynamic">Dynamic Programming</option>
+                    <option value="backtracking">Backtracking</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="algorithm">Select Algorithm:</label>
+                <select id="algorithm"></select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputData">Input Data:</label>
+                <textarea id="inputData" rows="3" placeholder="Enter input (see format guide below)"></textarea>
+            </div>
+
+            <div class="instructions">
+                <strong>Input Format Guide:</strong>
+                <ul>
+                    <li><strong>Array/List:</strong> Comma-separated values → "5,3,1,2"</li>
+                    <li><strong>Single Value:</strong> For n (fibonacci, n-queens) → "8"</li>
+                    <li><strong>Two Lists:</strong> Separated by semicolon → "1,2;2,1" (for activity, LCS)</li>
+                    <li><strong>Three Lists:</strong> values;weights;capacity → "60,100;10,20;50"</li>
+                </ul>
+            </div>
+
+            <button id="runBtn" class="btn-primary">▶ Run Algorithm</button>
+        </section>
+
+        <section class="result">
+            <h2>Results</h2>
+            <div id="resultBox" class="result-box">
+                <p><em>Select an algorithm and click "Run" to see results here.</em></p>
+            </div>
+            <div id="metaInfo" class="meta-info"></div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>
