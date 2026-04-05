@@ -3,19 +3,29 @@ const algorithmMap = {
     divide: [
         { id: 'merge_sort', name: 'Merge Sort' },
         { id: 'quick_sort', name: 'Quick Sort' },
-        { id: 'binary_search', name: 'Binary Search' }
+        { id: 'binary_search', name: 'Binary Search' },
+        { id: 'heap_sort', name: 'Heap Sort' },
+        { id: 'strassen', name: "Strassen's Matrix Multiply" }
     ],
     greedy: [
         { id: 'fractional_knapsack', name: 'Fractional Knapsack' },
-        { id: 'activity_selection', name: 'Activity Selection' }
+        { id: 'activity_selection', name: 'Activity Selection' },
+        { id: 'kruskal', name: "Kruskal's Algorithm (MST)" },
+        { id: 'prim', name: "Prim's Algorithm (MST)" },
+        { id: 'optimal_merge', name: 'Optimal Merge Pattern' }
     ],
     dynamic: [
         { id: 'fibonacci', name: 'Fibonacci (DP)' },
         { id: 'knapsack', name: '0/1 Knapsack (DP)' },
-        { id: 'lcs', name: 'Longest Common Subsequence (LCS)' }
+        { id: 'lcs', name: 'Longest Common Subsequence (LCS)' },
+        { id: 'matrix_chain', name: 'Matrix Chain Multiplication' },
+        { id: 'tsp', name: 'TSP (Travelling Salesman Problem)' }
     ],
     backtracking: [
-        { id: 'nqueens', name: 'N-Queens Problem' }
+        { id: 'nqueens', name: 'N-Queens Problem' },
+        { id: 'naive_string', name: 'Naive String Matching' },
+        { id: 'rabin_karp', name: 'Rabin-Karp String Matching' },
+        { id: 'kmp', name: 'Knuth-Morris-Pratt Algorithm' }
     ]
 };
 
