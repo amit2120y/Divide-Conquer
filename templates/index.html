@@ -69,8 +69,22 @@
                 <p><em>Select an algorithm and click "Run" to see results here.</em></p>
             </div>
             <div id="metaInfo" class="meta-info"></div>
+            <button id="stepsBtn" class="btn-secondary" style="display:none;">Show Steps/Iterations</button>
         </section>
     </main>
+
+    <!-- Steps/Iterations Modal Dialog -->
+    <div id="stepsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Algorithm Steps & Iterations</h2>
+                <button class="close-btn" onclick="closeStepsModal();">&times;</button>
+            </div>
+            <div id="stepsContent" class="steps-container">
+                <p><em>Steps will appear here...</em></p>
+            </div>
+        </div>
+    </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 

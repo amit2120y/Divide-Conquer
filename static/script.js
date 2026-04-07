@@ -100,8 +100,50 @@ async function runAlgo() {
             </div>
         `;
 
+        // Show steps button if steps are available
+        const stepsBtn = document.getElementById('stepsBtn');
+        if (data.steps && data.steps.length > 0) {
+            window.currentSteps = data.steps;
+            stepsBtn.style.display = 'inline-block';
+            stepsBtn.onclick = showStepsModal;
+        } else {
+            stepsBtn.style.display = 'none';
+        }
+
     } catch (error) {
         showError('Error: ' + error.message);
+    }
+}
+
+function showStepsModal() {
+    const modal = document.getElementById('stepsModal');
+    const stepsContent = document.getElementById('stepsContent');
+
+    if (!window.currentSteps || window.currentSteps.length === 0) {
+        stepsContent.innerHTML = '<p><em>No steps available for this algorithm.</em></p>';
+    } else {
+        stepsContent.innerHTML = window.currentSteps.map((step, index) => `
+            <div class="step">
+                <div class="step-number">${index + 1}</div>
+                <div class="step-description">${step.description}</div>
+                ${step.detail ? `<div class="step-detail">${step.detail}</div>` : ''}
+            </div>
+        `).join('');
+    }
+
+    modal.classList.add('active');
+}
+
+function closeStepsModal() {
+    const modal = document.getElementById('stepsModal');
+    modal.classList.remove('active');
+}
+
+// Close modal when clicking outside the modal content
+window.onclick = function (event) {
+    const modal = document.getElementById('stepsModal');
+    if (event.target === modal) {
+        closeStepsModal();
     }
 }
 

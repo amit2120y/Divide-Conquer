@@ -27,6 +27,7 @@ def run_algorithm():
         result = None
         explanation = ""
         complexity = ""
+        steps = []
         
         # Divide & Conquer Algorithms
         if category == 'divide':
@@ -36,10 +37,21 @@ def run_algorithm():
                     arr = list(map(int, input_data.split(',')))
                 else:
                     arr = list(map(int, input_data.split()))
+                
+                # Track steps
+                original_arr = arr.copy()
                 result = merge_sort(arr)
                 complexity = "O(n log n)"
                 operations = len(arr) * (1 + len(bin(len(arr))) - 2)
                 explanation = "Divide and conquer approach: divide array in half, sort recursively, then merge"
+                
+                # Generate steps for merge sort
+                steps = [
+                    {"description": "Input array", "detail": str(original_arr)},
+                    {"description": "Divide: Split array into halves recursively", "detail": "Array is divided into single elements"},
+                    {"description": "Conquer: Merge subarrays in sorted order", "detail": "Compare elements and merge"},
+                    {"description": "Sorted Output", "detail": str(result)}
+                ]
                 
             elif algorithm == 'quick_sort':
                 # Parse input - handle both space and comma separated values
@@ -47,10 +59,21 @@ def run_algorithm():
                     arr = list(map(int, input_data.split(',')))
                 else:
                     arr = list(map(int, input_data.split()))
+                
+                original_arr = arr.copy()
                 result = quick_sort(arr)
                 complexity = "O(n log n) average, O(n²) worst"
                 operations = len(arr) * (1 + len(bin(len(arr))) - 2)
                 explanation = "Partition-based sorting: select pivot, partition array, recursively sort subarrays"
+                
+                # Generate steps for quick sort
+                steps = [
+                    {"description": "Input array", "detail": str(original_arr)},
+                    {"description": "Select pivot element", "detail": f"Pivot: {original_arr[0] if original_arr else 'N/A'}"},
+                    {"description": "Partition array into left and right", "detail": "Elements < pivot go left, > pivot go right"},
+                    {"description": "Recursively sort subarrays", "detail": "Apply same process to left and right partitions"},
+                    {"description": "Sorted Output", "detail": str(result)}
+                ]
                 
             elif algorithm == 'binary_search':
                 # Parse input: array,target format (array is auto-sorted for binary search)
@@ -78,16 +101,34 @@ def run_algorithm():
                 operations = len(bin(len(arr))) - 2
                 explanation = f"Search for {target} in sorted array {arr} by repeatedly dividing search interval in half"
                 
+                # Generate steps
+                steps = [
+                    {"description": "Sorted array", "detail": str(arr)},
+                    {"description": f"Searching for target: {target}", "detail": f"Start with full array range [0, {len(arr)-1}]"},
+                    {"description": "Check middle element", "detail": f"Compare {target} with middle values"},
+                    {"description": "Narrow search space", "detail": "Keep dividing the range in half based on comparison"},
+                    {"description": "Final Result", "detail": result}
+                ]
+                
             elif algorithm == 'heap_sort':
                 # Parse input - handle both space and comma separated values
                 if ',' in input_data:
                     arr = list(map(int, input_data.split(',')))
                 else:
                     arr = list(map(int, input_data.split()))
+                
+                original_arr = arr.copy()
                 result = heap_sort(arr)
                 complexity = "O(n log n)"
                 operations = len(arr) * (1 + len(bin(len(arr))) - 2)
                 explanation = "Build max heap, extract elements in order to sort array"
+                
+                steps = [
+                    {"description": "Input array", "detail": str(original_arr)},
+                    {"description": "Build max heap", "detail": "Organize array into heap structure"},
+                    {"description": "Extract root (max) repeatedly", "detail": "Remove max element and heapify"},
+                    {"description": "Sorted Output", "detail": str(result)}
+                ]
                 
             elif algorithm == 'strassen':
                 lines = input_data.strip().split('\n')
@@ -97,6 +138,13 @@ def run_algorithm():
                 complexity = "O(n^2.807)"
                 operations = int(7 ** (len(bin(len(A))) - 2))
                 explanation = "Recursive matrix multiplication using 7 multiplications instead of 8"
+                
+                steps = [
+                    {"description": "Matrix A (2x2)", "detail": str(A)},
+                    {"description": "Matrix B (2x2)", "detail": str(B)},
+                    {"description": "Strassen Algorithm", "detail": "Compute 7 M products instead of 8 multiplications"},
+                    {"description": "Result Matrix (2x2)", "detail": str(result)}
+                ]
         
         # Greedy Algorithms
         elif category == 'greedy':
@@ -122,6 +170,15 @@ def run_algorithm():
                 operations = len(values) * (1 + len(bin(len(values))) - 2)
                 explanation = "Greedy approach: sort items by value/weight ratio, fill knapsack in order"
                 
+                # Generate steps
+                steps = [
+                    {"description": "Items with values and weights", "detail": f"Values: {values}, Weights: {weights}"},
+                    {"description": f"Knapsack capacity: {capacity}", "detail": f"Can carry up to {capacity} units of weight"},
+                    {"description": "Calculate value-to-weight ratio", "detail": "Ratio = Value / Weight for each item"},
+                    {"description": "Sort by ratio (greedy choice)", "detail": "Pick items with highest ratio first"},
+                    {"description": f"Total value achieved: {result}", "detail": "Fill knapsack greedily"}
+                ]
+                
             elif algorithm == 'kruskal':
                 lines = input_data.strip().split('\n')
                 n = int(lines[0])
@@ -137,6 +194,14 @@ def run_algorithm():
                 complexity = "O(E log E)"
                 operations = len(edges) * (1 + len(bin(len(edges))) - 2)
                 explanation = "Find minimum spanning tree using union-find and greedy edge selection"
+                
+                steps = [
+                    {"description": f"Graph with {n} vertices", "detail": f"Create union-find data structure"},
+                    {"description": "Sort edges by weight", "detail": f"Total edges: {len(edges)}"},
+                    {"description": "Process edges in ascending weight order", "detail": "Use greedy approach to select edges"},
+                    {"description": "Union-Find operations", "detail": "Check if edge creates cycle, if not add to MST"},
+                    {"description": f"Minimum Spanning Tree Cost: {cost}", "detail": f"Edges in MST: {mst}"}
+                ]
                 
             elif algorithm == 'prim':
                 lines = input_data.strip().split('\n')
@@ -154,6 +219,14 @@ def run_algorithm():
                 operations = len(edges) * (1 + len(bin(n)) - 2)
                 explanation = "Build MST by greedily adding minimum weight edges using priority queue"
                 
+                steps = [
+                    {"description": f"Start with vertex 0", "detail": f"Initialize visited set with vertex 0"},
+                    {"description": "Use priority queue to track minimum edges", "detail": f"Total vertices: {n}"},
+                    {"description": "Greedily select minimum weight edge", "detail": "Always pick edge with smallest weight"},
+                    {"description": "Add new vertex to MST", "detail": "Expand MST by connecting new vertices"},
+                    {"description": f"Minimum Spanning Tree Cost: {cost}", "detail": f"Edges in MST: {mst}"}
+                ]
+                
             elif algorithm == 'optimal_merge':
                 # Parse input - handle both space and comma separated values
                 if ',' in input_data:
@@ -165,6 +238,14 @@ def run_algorithm():
                 complexity = "O(n log n)"
                 operations = len(file_sizes) * (1 + len(bin(len(file_sizes))) - 2)
                 explanation = "Determine optimal order to merge files to minimize total operations"
+                
+                steps = [
+                    {"description": "File sizes to merge", "detail": str(file_sizes)},
+                    {"description": "Use greedy approach with priority queue", "detail": "Always merge two smallest files first"},
+                    {"description": "Calculate merge costs", "detail": f"Cost of merging two files = sum of their sizes"},
+                    {"description": "Repeat until all files merged", "detail": f"Total merge operations: {len(merges)}"},
+                    {"description": f"Optimal total cost: {cost}", "detail": f"Merge sequence: {merges}"}
+                ]
         
         # Dynamic Programming Algorithms
         elif category == 'dynamic':
@@ -174,6 +255,21 @@ def run_algorithm():
                 complexity = "O(n)"
                 operations = n
                 explanation = "Compute nth Fibonacci number using bottom-up dynamic programming"
+                
+                # Generate steps
+                fib_steps = []
+                dp = [0] * (n + 1)
+                if n >= 0:
+                    dp[0] = 0
+                if n >= 1:
+                    dp[1] = 1
+                fib_steps.append({"description": "Base cases", "detail": f"F(0)=0, F(1)=1"})
+                for i in range(2, n + 1):
+                    dp[i] = dp[i-1] + dp[i-2]
+                    if i <= 5 or i == n:  # Show first few and last
+                        fib_steps.append({"description": f"Calculate F({i})", "detail": f"F({i}) = F({i-1}) + F({i-2}) = {dp[i-1]} + {dp[i-2]} = {dp[i]}"})
+                fib_steps.append({"description": f"Result: F({n}) = {result}", "detail": f"Final Fibonacci number"})
+                steps = fib_steps
                 
             elif algorithm == 'knapsack':
                 # Handle both newline-separated and semicolon-separated input
@@ -197,6 +293,14 @@ def run_algorithm():
                 operations = len(values) * W
                 explanation = "Find maximum value items that fit in knapsack using 0/1 DP"
                 
+                steps = [
+                    {"description": "Items with values and weights", "detail": f"Values: {values}, Weights: {weights}"},
+                    {"description": f"Knapsack capacity: {W}", "detail": f"Maximum weight: {W} units"},
+                    {"description": f"Number of items: {len(values)}", "detail": "Create DP table of size (n+1) x (W+1)"},
+                    {"description": "Fill DP table bottom-up", "detail": "For each item, decide to include or exclude"},
+                    {"description": f"Maximum value: {result}", "detail": "Traceback to find items selected"}
+                ]
+                
             elif algorithm == 'lcs':
                 # Handle both newline-separated and semicolon-separated input
                 if '\n' in input_data:
@@ -211,6 +315,14 @@ def run_algorithm():
                 operations = len(X) * len(Y)
                 explanation = "Find longest common subsequence using 2D DP table"
                 
+                steps = [
+                    {"description": "First string (X)", "detail": f"'{X}'"},
+                    {"description": "Second string (Y)", "detail": f"'{Y}'"},
+                    {"description": f"Create DP table: ({len(X)+1}) x ({len(Y)+1})", "detail": "Initialize first row and column to 0"},
+                    {"description": "Fill DP table", "detail": f"If X[i]==Y[j]: dp[i][j]=dp[i-1][j-1]+1"},
+                    {"description": f"Longest Common Subsequence: '{result}'", "detail": f"Length: {len(result)}"}
+                ]
+                
             elif algorithm == 'matrix_chain':
                 # Handle both space and comma separated values
                 if ',' in input_data:
@@ -222,6 +334,14 @@ def run_algorithm():
                 complexity = "O(n³)"
                 operations = (len(dimensions) - 1) ** 3
                 explanation = "Find optimal parenthesization order to minimize scalar multiplications"
+                
+                steps = [
+                    {"description": f"Matrices: {len(dimensions)-1}", "detail": f"Dimensions: {dimensions}"},
+                    {"description": "Matrix sizes", "detail": f"M1: {dimensions[0]}x{dimensions[1]}, M2: {dimensions[1]}x{dimensions[2]}, ..."},
+                    {"description": "Create DP table (cost)", "detail": f"Size: ({len(dimensions)-1}) x ({len(dimensions)-1})"},
+                    {"description": "Fill table for all possible ways", "detail": "Try all parenthesizations"},
+                    {"description": f"Minimum scalar multiplications: {result}", "detail": "Optimal parenthesization found"}
+                ]
                 
             elif algorithm == 'tsp':
                 lines = input_data.strip().split('\n')
@@ -235,6 +355,14 @@ def run_algorithm():
                 complexity = "O(n² * 2^n)"
                 operations = (len(dist_matrix) ** 2) * (1 << len(dist_matrix))
                 explanation = "Find shortest Hamiltonian cycle using bitmask DP"
+                
+                steps = [
+                    {"description": f"Number of cities: {len(dist_matrix)}", "detail": "Distance matrix provided"},
+                    {"description": "Use bitmask DP approach", "detail": "dp[mask][i] = min cost to visit cities in mask ending at city i"},
+                    {"description": f"Total states: {1 << len(dist_matrix)}", "detail": f"2^{len(dist_matrix)} possible subsets"},
+                    {"description": "Fill DP table bottom-up", "detail": "Compute shortest path for all subsets"},
+                    {"description": f"Shortest tour cost: {cost}", "detail": f"Optimal path: {' -> '.join(map(str, path))}"}
+                ]
         
         # Backtracking Algorithms
         elif category == 'backtracking':
@@ -248,50 +376,76 @@ def run_algorithm():
                     operations *= i
                 explanation = f"Place {n} queens on {n}x{n} board with no attacks using backtracking"
                 
-            elif algorithm == 'naive_string':
-                # Handle both newline-separated and semicolon-separated input
-                if '\n' in input_data:
-                    lines = input_data.strip().split('\n')
-                else:
-                    lines = input_data.strip().split(';')
+                steps = [
+                    {"description": f"Problem: Place {n} queens on {n}x{n} board", "detail": "No two queens can attack each other"},
+                    {"description": "Backtracking approach", "detail": "Place queen in each row, check column and diagonal conflicts"},
+                    {"description": "Recursively solve", "detail": f"Try each column in current row, backtrack if no valid placement"},
+                    {"description": "Check constraints", "detail": "Ensure no queen threatens another (row, column, diagonal)"},
+                    {"description": f"Total solutions: {len(solutions)}", "detail": f"Found all valid board configurations"}
+                ]
                 
-                text = lines[0].strip()
-                pattern = lines[1].strip()
-                matches = naive_string_matching(text, pattern)
-                result = matches
-                complexity = "O((n-m+1)*m)"
-                operations = (len(text) - len(pattern) + 1) * len(pattern)
-                explanation = "Find all pattern occurrences using naive brute force approach"
+            elif algorithm == 'naive_string':
+                if ';' in input_data:
+                    text, pattern = input_data.split(';')
+                else:
+                    parts = input_data.split()
+                    text, pattern = parts[0], parts[1]
+                
+                positions = naive_string_matching(text.strip(), pattern.strip())
+                result = f"Pattern found at positions: {positions}"
+                complexity = "O(n*m)"
+                operations = len(text) * len(pattern)
+                explanation = "Find all occurrences of pattern in text using naive approach"
+                
+                steps = [
+                    {"description": "Text to search", "detail": f"'{text.strip()}'"},
+                    {"description": "Pattern to find", "detail": f"'{pattern.strip()}'"},
+                    {"description": "Naive sliding window", "detail": "Compare pattern with each position in text"},
+                    {"description": f"Comparisons needed: {len(text)} * {len(pattern)}", "detail": f"Worst case: {operations} character comparisons"},
+                    {"description": f"Pattern locations: {positions}", "detail": f"Found at {len(positions)} position(s)"}
+                ]
                 
             elif algorithm == 'rabin_karp':
-                # Handle both newline-separated and semicolon-separated input
-                if '\n' in input_data:
-                    lines = input_data.strip().split('\n')
+                if ';' in input_data:
+                    text, pattern = input_data.split(';')
                 else:
-                    lines = input_data.strip().split(';')
+                    parts = input_data.split()
+                    text, pattern = parts[0], parts[1]
                 
-                text = lines[0].strip()
-                pattern = lines[1].strip()
-                matches = rabin_karp(text, pattern)
-                result = matches
+                positions = rabin_karp(text.strip(), pattern.strip())
+                result = f"Pattern found at positions: {positions}"
                 complexity = "O(n+m) average"
                 operations = len(text) + len(pattern)
-                explanation = "Find pattern using rolling polynomial hash for efficient matching"
+                explanation = "Find pattern using rolling hash for efficient comparison"
+                
+                steps = [
+                    {"description": "Text to search", "detail": f"'{text.strip()}'"},
+                    {"description": "Pattern to find", "detail": f"'{pattern.strip()}'"},
+                    {"description": "Calculate pattern hash", "detail": f"Hash of pattern: {hash(pattern.strip())}"},
+                    {"description": "Rolling hash approach", "detail": "Slide window and update hash incrementally"},
+                    {"description": f"Pattern locations: {positions}", "detail": f"Found at {len(positions)} position(s)"}
+                ]
                 
             elif algorithm == 'kmp':
-                # Handle both newline-separated and semicolon-separated input
-                if '\n' in input_data:
-                    lines = input_data.strip().split('\n')
+                if ';' in input_data:
+                    text, pattern = input_data.split(';')
                 else:
-                    lines = input_data.strip().split(';')
+                    parts = input_data.split()
+                    text, pattern = parts[0], parts[1]
                 
-                text = lines[0].strip()
-                pattern = lines[1].strip()
-                matches = knuth_morris_pratt(text, pattern)
-                result = matches
+                positions = knuth_morris_pratt(text.strip(), pattern.strip())
+                result = f"Pattern found at positions: {positions}"
                 complexity = "O(n+m)"
                 operations = len(text) + len(pattern)
-                explanation = "Find pattern using failure function array for optimal matching"
+                explanation = "Find pattern using KMP failure function to avoid redundant comparisons"
+                
+                steps = [
+                    {"description": "Text to search", "detail": f"'{text.strip()}'"},
+                    {"description": "Pattern to find", "detail": f"'{pattern.strip()}'"},
+                    {"description": "Build KMP failure function", "detail": f"Analyze pattern structure for '{pattern.strip()}'"},
+                    {"description": "Single pass matching", "detail": "Use failure function to skip redundant comparisons"},
+                    {"description": f"Pattern locations: {positions}", "detail": f"Found at {len(positions)} position(s)"}
+                ]
         
         end_time = time.time()
         
@@ -301,6 +455,7 @@ def run_algorithm():
             'operations': operations,
             'time': round(end_time - start_time, 6),
             'explanation': explanation,
+            'steps': steps,
             'success': True
         })
     
