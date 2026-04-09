@@ -14,17 +14,19 @@ const algorithmMap = {
         { id: 'optimal_merge', name: 'Optimal Merge Pattern' }
     ],
     dynamic: [
-        { id: 'fibonacci', name: 'Fibonacci (DP)' },
         { id: 'knapsack', name: '0/1 Knapsack (DP)' },
         { id: 'lcs', name: 'Longest Common Subsequence (LCS)' },
-        { id: 'matrix_chain', name: 'Matrix Chain Multiplication' },
-        { id: 'tsp', name: 'TSP (Travelling Salesman Problem)' }
+        { id: 'matrix_chain', name: 'Matrix Chain Multiplication' }
     ],
     backtracking: [
         { id: 'nqueens', name: 'N-Queens Problem' },
+        { id: 'tsp', name: 'TSP (Travelling Salesman Problem)' }
+    ],
+    string_matching: [
         { id: 'naive_string', name: 'Naive String Matching' },
         { id: 'rabin_karp', name: 'Rabin-Karp String Matching' },
-        { id: 'kmp', name: 'Knuth-Morris-Pratt Algorithm' }
+        { id: 'kmp', name: 'Knuth-Morris-Pratt Algorithm' },
+        { id: 'boyer_moore', name: 'Boyer-Moore Algorithm' }
     ]
 };
 

@@ -5,8 +5,9 @@ import traceback
 # Import all algorithms
 from algorithms.divide_conquer import merge_sort, quick_sort, binary_search, heap_sort, strassen_multiply
 from algorithms.greedy import fractional_knapsack, kruskal_algorithm, prim_algorithm, optimal_merge_pattern
-from algorithms.dynamic import fibonacci, knapsack_dp, lcs, matrix_chain_multiply, tsp_dp
-from algorithms.backtracking import n_queens, naive_string_matching, rabin_karp, knuth_morris_pratt
+from algorithms.dynamic import knapsack_dp, lcs, matrix_chain_multiply
+from algorithms.backtracking import n_queens, tsp_dp
+from algorithms.string_matching import naive_string_matching, rabin_karp, knuth_morris_pratt, boyer_moore
 
 app = Flask(__name__)
 
@@ -249,29 +250,7 @@ def run_algorithm():
         
         # Dynamic Programming Algorithms
         elif category == 'dynamic':
-            if algorithm == 'fibonacci':
-                n = int(input_data)
-                result = fibonacci(n)
-                complexity = "O(n)"
-                operations = n
-                explanation = "Compute nth Fibonacci number using bottom-up dynamic programming"
-                
-                # Generate steps
-                fib_steps = []
-                dp = [0] * (n + 1)
-                if n >= 0:
-                    dp[0] = 0
-                if n >= 1:
-                    dp[1] = 1
-                fib_steps.append({"description": "Base cases", "detail": f"F(0)=0, F(1)=1"})
-                for i in range(2, n + 1):
-                    dp[i] = dp[i-1] + dp[i-2]
-                    if i <= 5 or i == n:  # Show first few and last
-                        fib_steps.append({"description": f"Calculate F({i})", "detail": f"F({i}) = F({i-1}) + F({i-2}) = {dp[i-1]} + {dp[i-2]} = {dp[i]}"})
-                fib_steps.append({"description": f"Result: F({n}) = {result}", "detail": f"Final Fibonacci number"})
-                steps = fib_steps
-                
-            elif algorithm == 'knapsack':
+            if algorithm == 'knapsack':
                 # Handle both newline-separated and semicolon-separated input
                 if '\n' in input_data:
                     lines = input_data.strip().split('\n')
@@ -342,27 +321,6 @@ def run_algorithm():
                     {"description": "Fill table for all possible ways", "detail": "Try all parenthesizations"},
                     {"description": f"Minimum scalar multiplications: {result}", "detail": "Optimal parenthesization found"}
                 ]
-                
-            elif algorithm == 'tsp':
-                lines = input_data.strip().split('\n')
-                dist_matrix = []
-                for line in lines:
-                    # Handle both space and comma separated values
-                    row = line.split(',') if ',' in line else line.split()
-                    dist_matrix.append(list(map(int, row)))
-                cost, path = tsp_dp(dist_matrix)
-                result = {"cost": cost, "path": path}
-                complexity = "O(n² * 2^n)"
-                operations = (len(dist_matrix) ** 2) * (1 << len(dist_matrix))
-                explanation = "Find shortest Hamiltonian cycle using bitmask DP"
-                
-                steps = [
-                    {"description": f"Number of cities: {len(dist_matrix)}", "detail": "Distance matrix provided"},
-                    {"description": "Use bitmask DP approach", "detail": "dp[mask][i] = min cost to visit cities in mask ending at city i"},
-                    {"description": f"Total states: {1 << len(dist_matrix)}", "detail": f"2^{len(dist_matrix)} possible subsets"},
-                    {"description": "Fill DP table bottom-up", "detail": "Compute shortest path for all subsets"},
-                    {"description": f"Shortest tour cost: {cost}", "detail": f"Optimal path: {' -> '.join(map(str, path))}"}
-                ]
         
         # Backtracking Algorithms
         elif category == 'backtracking':
@@ -383,8 +341,34 @@ def run_algorithm():
                     {"description": "Check constraints", "detail": "Ensure no queen threatens another (row, column, diagonal)"},
                     {"description": f"Total solutions: {len(solutions)}", "detail": f"Found all valid board configurations"}
                 ]
+            
+            elif algorithm == 'tsp':
+                lines = input_data.strip().split('\n')
+                dist_matrix = []
+                for line in lines:
+                    # Handle both space and comma separated values
+                    row = line.split(',') if ',' in line else line.split()
+                    dist_matrix.append(list(map(int, row)))
+                cost, path = tsp_dp(dist_matrix)
+                result = {"cost": cost, "path": path}
+                complexity = "O(n² * 2^n)"
+                operations = (len(dist_matrix) ** 2) * (1 << len(dist_matrix))
+                explanation = "Find shortest Hamiltonian cycle using bitmask DP with backtracking"
                 
-            elif algorithm == 'naive_string':
+                steps = [
+                    {"description": f"Number of cities: {len(dist_matrix)}", "detail": "Distance matrix provided"},
+                    {"description": "Use bitmask DP approach", "detail": "dp[mask][i] = min cost to visit cities in mask ending at city i"},
+                    {"description": f"Total states: {1 << len(dist_matrix)}", "detail": f"2^{len(dist_matrix)} possible subsets"},
+                    {"description": "Fill DP table bottom-up", "detail": "Compute shortest path for all subsets"},
+                    {"description": f"Shortest tour cost: {cost}", "detail": f"Optimal path: {' -> '.join(map(str, path))}"}
+                ]
+                
+            else:
+                raise ValueError(f"Unknown backtracking algorithm: {algorithm}")
+        
+        # String Matching Algorithms
+        elif category == 'string_matching':
+            if algorithm == 'naive_string':
                 if ';' in input_data:
                     text, pattern = input_data.split(';')
                 else:
@@ -446,6 +430,30 @@ def run_algorithm():
                     {"description": "Single pass matching", "detail": "Use failure function to skip redundant comparisons"},
                     {"description": f"Pattern locations: {positions}", "detail": f"Found at {len(positions)} position(s)"}
                 ]
+            
+            elif algorithm == 'boyer_moore':
+                if ';' in input_data:
+                    text, pattern = input_data.split(';')
+                else:
+                    parts = input_data.split()
+                    text, pattern = parts[0], parts[1]
+                
+                positions = boyer_moore(text.strip(), pattern.strip())
+                result = f"Pattern found at positions: {positions}"
+                complexity = "O(n/m) best, O(n*m) worst"
+                operations = len(text) + len(pattern)
+                explanation = "Find pattern using Boyer-Moore algorithm with bad character rule"
+                
+                steps = [
+                    {"description": "Text to search", "detail": f"'{text.strip()}'"},
+                    {"description": "Pattern to find", "detail": f"'{pattern.strip()}'"},
+                    {"description": "Build bad character table", "detail": f"Analyze character positions in pattern"},
+                    {"description": "Scan from right to left", "detail": "Skip mismatches using bad character rule"},
+                    {"description": f"Pattern locations: {positions}", "detail": f"Found at {len(positions)} position(s)"}
+                ]
+            
+            else:
+                raise ValueError(f"Unknown string matching algorithm: {algorithm}")
         
         end_time = time.time()
         

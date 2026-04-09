@@ -20,105 +20,58 @@ def n_queens(n):
     solve(0)
     return solutions
 
-def naive_string_matching(text, pattern):
-    """Naive String Matching - O((n-m+1)*m)"""
-    matches = []
-    n, m = len(text), len(pattern)
+def tsp_dp(dist_matrix):
+    """Travelling Salesman Problem using Dynamic Programming - O(n^2 * 2^n)
+    dist_matrix: symmetric distance matrix
+    """
+    n = len(dist_matrix)
+    if n <= 1:
+        return 0, [0]
     
-    for i in range(n - m + 1):
-        match = True
-        for j in range(m):
-            if text[i + j] != pattern[j]:
-                match = False
-                break
-        if match:
-            matches.append(i)
+    # dp[mask][i] = minimum cost to visit all cities in mask ending at city i
+    dp = [[float('inf')] * n for _ in range(1 << n)]
+    parent = [[-1] * n for _ in range(1 << n)]
     
-    return matches
-
-def rabin_karp(text, pattern):
-    """Rabin-Karp String Matching - O(n + m) average case"""
-    matches = []
-    n, m = len(text), len(pattern)
+    # Start from city 0
+    dp[1][0] = 0
     
-    if m > n:
-        return matches
+    for mask in range(1, 1 << n):
+        for u in range(n):
+            if not (mask & (1 << u)):
+                continue
+            if dp[mask][u] == float('inf'):
+                continue
+            
+            for v in range(n):
+                if mask & (1 << v):
+                    continue
+                new_mask = mask | (1 << v)
+                cost = dp[mask][u] + dist_matrix[u][v]
+                if cost < dp[new_mask][v]:
+                    dp[new_mask][v] = cost
+                    parent[new_mask][v] = u
     
-    # Prime number for hashing
-    prime = 101
-    base = 256
-    mod = 101
+    # Find minimum cost to return to city 0
+    full_mask = (1 << n) - 1
+    min_cost = float('inf')
+    last_city = -1
     
-    pattern_hash = 0
-    text_hash = 0
-    power = 1
+    for i in range(1, n):
+        cost = dp[full_mask][i] + dist_matrix[i][0]
+        if cost < min_cost:
+            min_cost = cost
+            last_city = i
     
-    # Calculate hash of pattern and first window
-    for i in range(m):
-        pattern_hash = (base * pattern_hash + ord(pattern[i])) % mod
-        text_hash = (base * text_hash + ord(text[i])) % mod
-        if i < m - 1:
-            power = (power * base) % mod
+    # Reconstruct path
+    path = [0]
+    mask = full_mask
+    current = last_city
     
-    # Slide window
-    for i in range(n - m + 1):
-        if pattern_hash == text_hash:
-            # Verify actual match
-            match = True
-            for j in range(m):
-                if text[i + j] != pattern[j]:
-                    match = False
-                    break
-            if match:
-                matches.append(i)
-        
-        # Calculate hash for next window
-        if i < n - m:
-            text_hash = (base * (text_hash - ord(text[i]) * power) + ord(text[i + m])) % mod
-            if text_hash < 0:
-                text_hash += mod
+    while current != 0:
+        path.append(current)
+        prev = parent[mask][current]
+        mask ^= (1 << current)
+        current = prev
     
-    return matches
-
-def knuth_morris_pratt(text, pattern):
-    """Knuth-Morris-Pratt String Matching - O(n + m)"""
-    matches = []
-    n, m = len(text), len(pattern)
-    
-    if m > n or m == 0:
-        return matches
-    
-    # Build LPS (Longest Proper Prefix which is also Suffix) array
-    lps = [0] * m
-    length = 0
-    i = 1
-    
-    while i < m:
-        if pattern[i] == pattern[length]:
-            length += 1
-            lps[i] = length
-            i += 1
-        else:
-            if length != 0:
-                length = lps[length - 1]
-            else:
-                lps[i] = 0
-                i += 1
-    
-    # Search for pattern in text
-    i, j = 0, 0
-    while i < n:
-        if pattern[j] == text[i]:
-            i += 1
-            j += 1
-        
-        if j == m:
-            matches.append(i - j)
-            j = lps[j - 1]
-        elif i < n and pattern[j] != text[i]:
-            if j != 0:
-                j = lps[j - 1]
-            else:
-                i += 1
-    
-    return matches
+    path.reverse()
+    return int(min_cost), path
