@@ -62,14 +62,25 @@ def run_algorithm():
                     arr = list(map(int, input_data.split()))
                 
                 original_arr = arr.copy()
-                result = quick_sort(arr)
-                complexity = "O(n log n) average, O(n²) worst"
-                operations = len(arr) * (1 + len(bin(len(arr))) - 2)
-                explanation = "Partition-based sorting: select pivot, partition array, recursively sort subarrays"
+                result, was_sorted = quick_sort(arr)
+                
+                # Calculate operations based on whether array is sorted
+                n = len(arr)
+                if was_sorted:
+                    # Already sorted (increasing or decreasing): worst case O(n²)
+                    operations = n * n
+                    complexity = "O(n²) - Input already sorted!"
+                    explanation = "Partition-based sorting: array is already sorted (increasing or decreasing), leading to worst-case O(n²) complexity"
+                else:
+                    # Unsorted: average case O(n log n)
+                    operations = n * (1 + len(bin(n)) - 2)
+                    complexity = "O(n log n) average, O(n²) worst"
+                    explanation = "Partition-based sorting: select pivot, partition array, recursively sort subarrays"
                 
                 # Generate steps for quick sort
                 steps = [
                     {"description": "Input array", "detail": str(original_arr)},
+                    {"description": f"Array status: {'SORTED' if was_sorted else 'UNSORTED'}", "detail": f"Array is {'already sorted (increasing or decreasing)' if was_sorted else 'not sorted'}"},
                     {"description": "Select pivot element", "detail": f"Pivot: {original_arr[0] if original_arr else 'N/A'}"},
                     {"description": "Partition array into left and right", "detail": "Elements < pivot go left, > pivot go right"},
                     {"description": "Recursively sort subarrays", "detail": "Apply same process to left and right partitions"},

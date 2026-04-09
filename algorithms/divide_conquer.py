@@ -7,12 +7,27 @@ def merge_sort(arr):
     return sorted(left + right)
 
 def quick_sort(arr):
-    if len(arr) <= 1:
-        return arr
-    pivot = arr[0]
-    left = [x for x in arr if x < pivot]
-    right = [x for x in arr if x > pivot]
-    return quick_sort(left) + [pivot] + quick_sort(right)
+    def is_sorted(a):
+        """Check if array is sorted (increasing or decreasing)"""
+        if len(a) <= 1:
+            return True
+        is_increasing = all(a[i] <= a[i+1] for i in range(len(a)-1))
+        is_decreasing = all(a[i] >= a[i+1] for i in range(len(a)-1))
+        return is_increasing or is_decreasing
+    
+    # Check if input is already sorted
+    was_sorted = is_sorted(arr)
+    
+    def sort_arr(a):
+        if len(a) <= 1:
+            return a
+        pivot = a[0]
+        left = [x for x in a if x < pivot]
+        right = [x for x in a if x > pivot]
+        return sort_arr(left) + [pivot] + sort_arr(right)
+    
+    result = sort_arr(arr)
+    return result, was_sorted
 
 def binary_search(arr, target):
     l, r = 0, len(arr)-1
