@@ -51,11 +51,16 @@
                     <li><strong>Single Value:</strong> For n (fibonacci, n-queens) → "8"</li>
                     <li><strong>LCS (Longest Common Subsequence):</strong> Two strings separated by semicolon →
                         "AGGTAB;GXTXAYB" (finds longest common subsequence)</li>
-                    <li><strong>Three Lists:</strong> values;weights;capacity → "60,100;10,20;50"</li>
+                    <li><strong>Fractional Knapsack:</strong> Three lines → values (line 1), weights (line 2), capacity
+                        (line 3) → "60 100\n10 20\n50" (profits 60,100 with weights 10,20 and capacity 50)</li>
                     <li><strong>Kruskal/Prim (MST):</strong> First line = n (vertices), then edges (u v w) → "4\n0 1
                         1\n0 2 2\n1 2 3\n2 3 4"</li>
-                    <li><strong>Strassen Matrix Multiply:</strong> Two 2×2 matrices (4 rows) → "1 2\n3 4\n5 6\n7 8"
-                        (first 2 rows = Matrix A, next 2 rows = Matrix B)</li>
+                    <li><strong>Strassen Matrix Multiply:</strong> Two n×n square matrices (n must be power of 2: 2, 4,
+                        8, 16...) →
+                        For 2×2: "1 2\n3 4\n5 6\n7 8" (4 total rows) |
+                        For 4×4: "1 2 3 4\n5 6 7 8\n9 10 11 12\n13 14 15 16\n1 2 3 4\n5 6 7 8\n9 10 11 12\n13 14 15 16"
+                        (8 total rows)
+                        (first n rows = Matrix A, next n rows = Matrix B)</li>
                     <li><strong>Matrix Chain Multiply:</strong> Dimension array → "10 20 30 40" (for matrices 10×20,
                         20×30, 30×40)</li>
                     <li><strong>TSP (Traveling Salesman Problem):</strong> Distance matrix rows separated by newline →

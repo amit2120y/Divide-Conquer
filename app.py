@@ -155,19 +155,34 @@ def run_algorithm():
                 
             elif algorithm == 'strassen':
                 lines = input_data.strip().split('\n')
-                A = [list(map(int, line.split())) for line in lines[:2]]
-                B = [list(map(int, line.split())) for line in lines[2:]]
+                # Filter out empty lines
+                lines = [line for line in lines if line.strip()]
+                
+                # Determine matrix size (n x n for n rows = n^2 elements)
+                n = len(lines) // 2  # Divide total lines by 2 to get n for n x n matrices
+                
+                # Parse matrix A (first n lines) and matrix B (last n lines)
+                A = [list(map(int, line.split())) for line in lines[:n]]
+                B = [list(map(int, line.split())) for line in lines[n:]]
+                
+                # Verify matrices are square
+                if len(A) != len(A[0]) or len(B) != len(B[0]):
+                    raise ValueError(f"Matrices must be square. Got A: {len(A)}x{len(A[0])}, B: {len(B)}x{len(B[0])}")
+                
+                # Note: Strassen requires matrix dimensions to be powers of 2
                 result = strassen_multiply(A, B)
+                # Convert NumPy array to list for JSON serialization
+                result = result.tolist()
                 complexity = "O(n^2.807)"
-                n = len(A)
-                operations = int(7 ** math.log2(n)) if n > 1 else 7
-                explanation = "Recursive matrix multiplication using 7 multiplications instead of 8"
+                matrix_size = len(A)
+                operations = int(7 ** math.log2(matrix_size)) if matrix_size > 1 else 7
+                explanation = f"Recursive matrix multiplication using 7 multiplications instead of 8 for {matrix_size}x{matrix_size} matrices"
                 
                 steps = [
-                    {"description": "Matrix A (2x2)", "detail": str(A)},
-                    {"description": "Matrix B (2x2)", "detail": str(B)},
-                    {"description": "Strassen Algorithm", "detail": "Compute 7 M products instead of 8 multiplications"},
-                    {"description": "Result Matrix (2x2)", "detail": str(result)}
+                    {"description": f"Matrix A ({matrix_size}x{matrix_size})", "detail": str(A)},
+                    {"description": f"Matrix B ({matrix_size}x{matrix_size})", "detail": str(B)},
+                    {"description": "Strassen Algorithm", "detail": "Divide matrices into submatrices, compute 7 products instead of 8 multiplications"},
+                    {"description": f"Result Matrix ({matrix_size}x{matrix_size})", "detail": str(result)}
                 ]
         
         # Greedy Algorithms
@@ -189,7 +204,7 @@ def run_algorithm():
                 
                 # Parse capacity
                 capacity = int(lines[2])
-                result = fractional_knapsack(values, weights, capacity)
+                result = fractional_knapsack(weights, values, capacity)
                 complexity = "O(n log n)"
                 n = len(values)
                 operations = int(n * math.log2(n)) if n > 1 else n

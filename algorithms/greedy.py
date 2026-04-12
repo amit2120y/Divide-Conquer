@@ -1,16 +1,28 @@
-def fractional_knapsack(values, weights, capacity):
-    items = list(zip(values, weights))
-    items.sort(key=lambda x: x[0]/x[1], reverse=True)
+def fractional_knapsack(weights, values, capacity):
+    # 1. Calculate Profit-Weight Ratio for each item
+    n = len(values)
+    ratio = []
+    for i in range(n):
+        ratio.append((values[i] / weights[i], weights[i], values[i]))
 
-    total = 0
-    for v, w in items:
+    # 2. Sort items in descending order based on the ratio
+    # x[0] refers to the ratio (profit/weight)
+    ratio.sort(key=lambda x: x[0], reverse=True)
+
+    total_profit = 0.0
+    
+    # 3. Iterate through sorted items to fill the knapsack
+    for r, w, p in ratio:
         if capacity >= w:
-            total += v
+            # Add the whole item if capacity allows
             capacity -= w
+            total_profit += p
         else:
-            total += v * (capacity/w)
-            break
-    return total
+            # Add a fraction of the item if capacity is limited
+            total_profit += p * (capacity / w)
+            break  # Knapsack is full
+            
+    return total_profit
 
 def kruskal_algorithm(n, edges):
     """Kruskal's Algorithm for Minimum Spanning Tree - O(E log E)"""
