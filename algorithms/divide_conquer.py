@@ -2,21 +2,12 @@ import numpy as np
 
 def merge_sort(arr):
     if len(arr) > 1:
-        # Finding the middle index
         mid = len(arr) // 2
-        
-        # Dividing the list into two halves
         left = arr[:mid]
         right = arr[mid:]
-
-        # Recursively sorting both halves
         merge_sort(left)
         merge_sort(right)
-
-        # Merging the sorted halves
         i = j = k = 0
-        
-        # Compare elements from both lists and place them in arr
         while i < len(left) and j < len(right):
             if left[i] < right[j]:
                 arr[k] = left[i]
@@ -25,33 +16,24 @@ def merge_sort(arr):
                 arr[k] = right[j]
                 j += 1
             k += 1
-
-        # Checking if any element was left in left
         while i < len(left):
             arr[k] = left[i]
             i += 1
             k += 1
-
-        # Checking if any element was left in right
         while j < len(right):
             arr[k] = right[j]
             j += 1
             k += 1
-    
     return arr
 
 def quick_sort(arr):
     def is_sorted(a):
-        """Check if array is sorted (increasing or decreasing)"""
         if len(a) <= 1:
             return True
         is_increasing = all(a[i] <= a[i+1] for i in range(len(a)-1))
         is_decreasing = all(a[i] >= a[i+1] for i in range(len(a)-1))
         return is_increasing or is_decreasing
-    
-    # Check if input is already sorted
     was_sorted = is_sorted(arr)
-    
     def sort_arr(a):
         if len(a) <= 1:
             return a
@@ -59,61 +41,42 @@ def quick_sort(arr):
         left = [x for x in a[1:] if x <= pivot]
         right = [x for x in a[1:] if x > pivot]
         return sort_arr(left) + [pivot] + sort_arr(right)
-    
     result = sort_arr(arr)
     return result, was_sorted
 
 def binary_search(arr, target):
     l, r = 0, len(arr)-1
     first_check = True
-    
     while l <= r:
         mid = (l+r)//2
         if arr[mid] == target:
-            # Return index and flag indicating if found at first check
             return mid, first_check
         elif arr[mid] < target:
             l = mid + 1
         else:
             r = mid - 1
         first_check = False
-    
     return -1, False
 
 def heapify(arr, n, i):
-    largest = i  # Initialize largest as root
-    left = 2 * i + 1  # left = 2*i + 1
-    right = 2 * i + 2  # right = 2*i + 2
-
-    # Check if left child of root exists and is greater than root
+    largest = i
+    left = 2 * i + 1
+    right = 2 * i + 2
     if left < n and arr[left] > arr[largest]:
         largest = left
-
-    # Check if right child of root exists and is greater than root
     if right < n and arr[right] > arr[largest]:
         largest = right
-
-    # If largest is not root, swap and continue heapifying
     if largest != i:
         arr[i], arr[largest] = arr[largest], arr[i]
         heapify(arr, n, largest)
 
 def heap_sort(arr):
     n = len(arr)
-
-    # Step 1: Build a max heap
-    # Start from the last internal node and move up to the root
     for i in range(n // 2 - 1, -1, -1):
         heapify(arr, n, i)
-
-    # Step 2: Extract elements from heap one by one
     for last_index in range(n - 1, 0, -1):
-        # Swap root (max element) with the last element
         arr[0], arr[last_index] = arr[last_index], arr[0]
-        
-        # Heapify the reduced heap to maintain max heap property
         heapify(arr, last_index, 0)
-
     return arr
 
 def strassen_multiply(A, B):
